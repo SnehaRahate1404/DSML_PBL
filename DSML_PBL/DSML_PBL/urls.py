@@ -22,8 +22,6 @@ from DSML_PBL import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.Home),
-    path('about/', views.aboutUs),
+    path('result/', views.result),
     path('chat',views.chat),
-    
-    
 ]

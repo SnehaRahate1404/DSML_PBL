@@ -14,8 +14,6 @@ try:
 except FileNotFoundError as e:
     print(f"Error: {e}")
 
-
-
 def Home(request):
     data={
         'title' : 'Home page'
@@ -23,7 +21,7 @@ def Home(request):
     return render(request ,'index.html' , data)
 
 
-def aboutUs(request):
+def result(request):
     # Get initial proficiency and session duration from query parameters
     initial_proficiency = int(request.GET.get('initial_proficiency', 20))  # Default to 30 if not provided
     session_duration = int(request.GET.get('session_duration', 20))  # Default to 10 if not provided
@@ -51,7 +49,7 @@ def aboutUs(request):
         print(f"For {duration} minutes of session, you can achieve 90% proficiency in {days:.2f} days.")
 
     # Return a JSON response instead of a simple HttpResponse
-    return JsonResponse(ls, safe=False)
+    return render(request,'result.html',{'result':ls})
 
 def chat(request):
     if request.method == 'GET':
