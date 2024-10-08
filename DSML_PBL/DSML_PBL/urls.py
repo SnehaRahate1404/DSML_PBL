@@ -23,5 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.Home),
     path('result/', views.result),
-    path('chat',views.chat),
+    path('chatp',views.chatpage),
+    path('chat/',views.chat),
+    path('accuracy',views.accuracy)
 ]

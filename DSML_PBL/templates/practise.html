@@ -3,189 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" href="style.css"> -->
-    <title>Chat Window</title>
-
+    <title>Chatbot</title>
+    {% comment %} <link rel="stylesheet" href="{% static 'chatbot/css/styles.css' %}"> {% endcomment %}
     <style>
-        /* General styling */
-body {
+        body {
     font-family: Arial, sans-serif;
-    background-color: #f1f1f1;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    background-color: #f0f0f0;
 }
 
-/* Chat container */
 .chat-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     width: 400px;
-    height: 600px;
+    margin: 50px auto;
     background-color: white;
-    border-radius: 15px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
-/* Chat box where messages are displayed */
 .chat-box {
-    flex-grow: 1;
+    padding: 20px;
+    height: 500px;
     overflow-y: auto;
-    padding-bottom: 20px;
-    border-bottom: 2px solid #ddd;
-    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
 }
 
-/* Chat message styling */
-.chat-message {
-    max-width: 70%;
+.chat-input {
+    display: flex;
     padding: 10px;
-    margin: 10px 0;
-    border-radius: 20px;
-    position: relative;
+    background-color: #f7f7f7;
 }
 
-.chat-message.user {
-    background-color: #dcf8c6;
-    align-self: flex-end;
-    margin-right: 10px;
+.chat-input input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
 }
 
-.chat-message.bot {
-    background-color: #f1f0f0;
-    align-self: flex-start;
+.chat-input button {
+    padding: 10px;
     margin-left: 10px;
-}
-
-/* Microphone button and timer */
-.mic {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.mic-button {
-    background-color: #25d366;
+    background-color: #007bff;
+    color: white;
     border: none;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    border-radius: 4px;
     cursor: pointer;
 }
 
-.mic-img {
-    width: 30px;
-    height: 30px;
+.chat-input button:hover {
+    background-color: #0056b3;
 }
 
-.timer {
-    font-size: 18px;
-    color: #555;
+.message {
+    margin: 10px 0;
 }
 
-/* Scroll bar for chat box */
-.chat-box::-webkit-scrollbar {
-    width: 8px;
+.message.user {
+    text-align: right;
+    color: #007bff;
 }
 
-.chat-box::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-}
-
-.chat-box::-webkit-scrollbar-track {
-    background-color: transparent;
+.message.bot {
+    text-align: left;
+    color: #333;
 }
 
     </style>
 </head>
 <body>
-    <div class="chat-container">
-        <div class="chat-box">
-            <!-- Example chat bubbles -->
-             
 
-             <div class="chat-message user">{{response}}</div>
-            <div class="chat-message bot">I need assistance with my project.</div> 
-
-        </div>
-        <div>    
-            <form action="/chat" method="post">
-                {% csrf_token %}
-                <label for=""></label>
-                <input type="text" name="msg" id="msg" placeholder="send msg..">
-                <button type="submit">send</button>
-            </form>
-        </div>
-        <!-- <div class="mic">
-            <button class="mic-button"><img src="assets/mic.jpg" class="mic-img" alt=""></button>
-            <div class="timer">00:00</div>
-        </div> -->
+<div class="chat-container">
+    <div class="chat-box" id="chat-box">
+        <!-- Chat messages will appear here -->
     </div>
-    <script>
-        document.getElementById('chat-form').addEventListener('submit', function(event) {
-            event.preventDefault();  // Prevent form submission from refreshing the page
+    <div class="chat-input">
+        <input type="text" id="user-input" placeholder="Type a message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
 
-            const messageInput = document.getElementById('msg');
-            const message = messageInput.value;
 
-            if (message.trim() !== "") {
-                appendMessage(message, 'user');  // Append user message to chat
-                messageInput.value = '';  // Clear input field
+<script>
+    function sendMessage() {
+    const userInput = document.getElementById('user-input').value;
+    if (userInput.trim() === "") return;
 
-                // Send the message to the server using fetch
-                fetch('/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': getCookie('csrftoken')  // Include CSRF token
-                    },
-                    body: JSON.stringify({ msg: message })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Append bot reply to chat
-                    appendMessage(data.response, 'bot');
-                })
-                .catch(error => console.error('Error:', error));
-            }
+    // Append user message to chat
+    appendMessage(userInput, 'user');
+
+    // Clear input field
+    document.getElementById('user-input').value = '';
+
+    // Make an AJAX request to get the chatbot response
+    fetch(`/chat/?message=${userInput}`)
+        .then(response => response.json())
+        .then(data => {
+            // Append chatbot response to chat
+            appendMessage(data.response, 'bot');
         });
+}
 
-        // Function to append a message to the chat box
-        function appendMessage(message, sender) {
-            const chatBox = document.getElementById('chat-box');
+function appendMessage(message, sender) {
+    const chatBox = document.getElementById('chat-box');
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message', sender);
+    messageElement.textContent = message;
 
-            const msgDiv = document.createElement('div');
-            msgDiv.classList.add('chat-message', sender);
-            msgDiv.textContent = message;
-
-            chatBox.appendChild(msgDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;  // Scroll to the bottom
+    chatBox.appendChild(messageElement);
+    chatBox.scrollTop = chatBox.scrollHeight;  // Scroll to the bottom
+}
+// Add event listener to the input field to send message on Enter key press
+document.getElementById('user-input').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            sendMessage();
         }
+    });
 
-        // Function to get CSRF token from cookies
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-    </script>
+</script>
 </body>
 </html>

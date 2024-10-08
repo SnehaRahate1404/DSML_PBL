@@ -1,0 +1,1 @@
+ownload('maxent_ne_chunker')

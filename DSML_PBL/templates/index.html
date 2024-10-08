@@ -20,8 +20,16 @@
                   <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="#" style="color: white;">Home</a>
                   </li>
+                  <li class="nav-item">
+                    
+                  </li>
                 </ul>
                 <div class="button">
+                  <form action="/accuracy" method="get" style="display:inline;">
+                    <button type="submit" class="btn btn-light">
+                      Accuracy of model
+                    </button>
+                  </form>
                     <a href="login.html"><button type="button" class="btn btn-light">Register</button></a>
                     <a href="profile.html"><img src="/static/images/profile.jpg" class="profile-icon" alt=""></a>
                 </div> 
@@ -29,7 +37,7 @@
             </div>
           </nav>
         <div class="wishes">
-            <h1 id="wishes">Hey {Name} <span class="time"></span>!!!  What would you like to do today </h1>
+            <h1 id="wishes">Hey {{Name}} <span class="time"></span>!!!  What would you like to do today </h1>
         </div>
         <div class="container-home">
             <div class="card" style="width: 20rem;">
@@ -37,7 +45,7 @@
                 <div class="card-body">
                   <h5 class="card-title">Practise</h5>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <a href="practise.html" class="btn btn-primary">Continue Practise</a>
+                  <a href="/chatp" class="btn btn-primary">Continue Practise</a>
                 </div>
             </div>
               <div class="card" style="width: 20rem;">

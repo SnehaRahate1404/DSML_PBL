@@ -4,7 +4,8 @@ from django.http import JsonResponse
 import os
 import joblib
 from django.conf import settings
-
+from .gpt_questions import generate_conversational_response
+from toolbox.text_to_voice import text_to_speech
 # Construct the full path to the model file
 model_path = os.path.join(settings.BASE_DIR, 'DSML_PBL', 'model_days.pkl')
 
@@ -51,11 +52,27 @@ def result(request):
     # Return a JSON response instead of a simple HttpResponse
     return render(request,'result.html',{'result':ls})
 
-def chat(request):
-    if request.method == 'GET':
-        replay="how can i help you"
-    elif request.method == 'POST':
-        msg=request.POST.get('msg')
-        replay="THIS IS REPLAY OF BOT "+msg
-    return render(request,"practise.html",{'response':replay})
+def chatpage(request):
+    return render(request,'practise.html')
 
+async def chat(request):
+    user_message = request.GET.get('message', None)
+    
+    # Simulate a chatbot response
+
+    if user_message:
+        response = generate_conversational_response('girlfriend',user_message)
+        await text_to_speech(response, voice='en-US-AriaNeural')
+    else:
+        response = "Chatbot says: Hello! How can I help you?"
+
+    return JsonResponse({'response': response})
+def accuracy(request):
+    data={
+        'decisiontree':'''Total Days Required - MSE: 157.04711508242963, MAE: 9.495566560020992, R²: 0.98
+Minutes Per Day - MSE: 4.21e-05, MAE: 0.0029900000000000187, R²: 1.00 ''',
+        'linearRegression':"0.91",
+        "gradientMethod":"0.87"
+    }
+    
+    return render(request,'accuracy.html',data)
