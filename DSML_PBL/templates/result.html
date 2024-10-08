@@ -10,9 +10,17 @@
         <link rel="stylesheet" href="">
     </head>
     <body>
-        {% for i  in result  %}
-        <h1>{{i}}</h1>
-        {% endfor %}       
+        <table>
+            {% for i  in result  %}
+            <tr>
+                <td>{{i.duration}}</td>
+                <td>{{i.days}}</td>
+            </tr>
+
+       
+
+        {% endfor %}   
+    </table>    
         <script src="" async defer></script>
     </body>
 </html>
