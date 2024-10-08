@@ -23,5 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.Home),
     path('about/', views.aboutUs),
+    path('chat',views.chat),
+    
     
 ]

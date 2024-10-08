@@ -3,18 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Practise</title>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <title>Chat Window</title>
+
+    <style>
+        /* General styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f1f1f1;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Chat container */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 400px;
+    height: 600px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+/* Chat box where messages are displayed */
+.chat-box {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 20px;
+}
+
+/* Chat message styling */
+.chat-message {
+    max-width: 70%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 20px;
+    position: relative;
+}
+
+.chat-message.user {
+    background-color: #dcf8c6;
+    align-self: flex-end;
+    margin-right: 10px;
+}
+
+.chat-message.bot {
+    background-color: #f1f0f0;
+    align-self: flex-start;
+    margin-left: 10px;
+}
+
+/* Microphone button and timer */
+.mic {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mic-button {
+    background-color: #25d366;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.mic-img {
+    width: 30px;
+    height: 30px;
+}
+
+.timer {
+    font-size: 18px;
+    color: #555;
+}
+
+/* Scroll bar for chat box */
+.chat-box::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.chat-box::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+    </style>
 </head>
 <body>
-    <div class="chat-box">
-       chats will be display here with corrected sentences
+    <div class="chat-container">
+        <div class="chat-box">
+            <!-- Example chat bubbles -->
+             
 
+             <div class="chat-message user">{{response}}</div>
+            <div class="chat-message bot">I need assistance with my project.</div> 
+
+        </div>
+        <div>    
+            <form action="/chat" method="post">
+                {% csrf_token %}
+                <label for=""></label>
+                <input type="text" name="msg" id="msg" placeholder="send msg..">
+                <button type="submit">send</button>
+            </form>
+        </div>
+        <!-- <div class="mic">
+            <button class="mic-button"><img src="assets/mic.jpg" class="mic-img" alt=""></button>
+            <div class="timer">00:00</div>
+        </div> -->
     </div>
-    <div class="mic">
-        <button class="mic-button"><img src="assets/mic.jpg" class="mic-img" alt=""></button>
-        <div class="timer">00:00</div>
-    </div>
-    <script src="script.js"></script>
+    <script>
+        document.getElementById('chat-form').addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent form submission from refreshing the page
+
+            const messageInput = document.getElementById('msg');
+            const message = messageInput.value;
+
+            if (message.trim() !== "") {
+                appendMessage(message, 'user');  // Append user message to chat
+                messageInput.value = '';  // Clear input field
+
+                // Send the message to the server using fetch
+                fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')  // Include CSRF token
+                    },
+                    body: JSON.stringify({ msg: message })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Append bot reply to chat
+                    appendMessage(data.response, 'bot');
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        });
+
+        // Function to append a message to the chat box
+        function appendMessage(message, sender) {
+            const chatBox = document.getElementById('chat-box');
+
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('chat-message', sender);
+            msgDiv.textContent = message;
+
+            chatBox.appendChild(msgDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;  // Scroll to the bottom
+        }
+
+        // Function to get CSRF token from cookies
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
 </body>
 </html>

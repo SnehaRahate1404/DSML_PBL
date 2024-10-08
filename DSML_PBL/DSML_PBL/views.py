@@ -52,3 +52,12 @@ def aboutUs(request):
 
     # Return a JSON response instead of a simple HttpResponse
     return JsonResponse(ls, safe=False)
+
+def chat(request):
+    if request.method == 'GET':
+        replay="how can i help you"
+    elif request.method == 'POST':
+        msg=request.POST.get('msg')
+        replay="THIS IS REPLAY OF BOT "+msg
+    return render(request,"practise.html",{'response':replay})
+
