@@ -25,5 +25,8 @@ urlpatterns = [
     path('result/', views.result),
     path('chatp',views.chatpage),
     path('chat/',views.chat),
-    path('accuracy',views.accuracy)
+    path('accuracy',views.accuracy),
+    path('characters',views.characters),
+    path('checkgrammar/',views.check_grammer),
+    path('accuracyScore',views.accuracy_score)
 ]

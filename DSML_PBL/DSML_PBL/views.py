@@ -6,8 +6,13 @@ import joblib
 from django.conf import settings
 from .gpt_questions import generate_conversational_response
 from toolbox.text_to_voice import text_to_speech
+from toolbox.language_tool import check_text_accuracy
+import json
+from asgiref.sync import sync_to_async
 # Construct the full path to the model file
 model_path = os.path.join(settings.BASE_DIR, 'DSML_PBL', 'model_days.pkl')
+
+userinputs=[]
 
 try:
     model_days = joblib.load(model_path)
@@ -53,20 +58,43 @@ def result(request):
     return render(request,'result.html',{'result':ls})
 
 def chatpage(request):
+    userinputs=[]
     return render(request,'practise.html')
 
 async def chat(request):
     user_message = request.GET.get('message', None)
+    userinputs.append(user_message)
     
+    # Check if the 'chat' key exists in the session
+    if not await sync_to_async(lambda: 'chat' in request.session)():
+        # Initialize the 'chat' key in the session if it does not exist
+        await sync_to_async(request.session.__setitem__)('chat', [])
+
     # Simulate a chatbot response
+    print("Chat system open")
 
     if user_message:
-        response = generate_conversational_response('girlfriend',user_message)
-        await text_to_speech(response, voice='en-US-AriaNeural')
+        # Append user message to the session chat history
+        await sync_to_async(request.session['chat'].append)(f"User: {user_message}")
+        
+        # Fetch chat history from the session
+        chat_history = await sync_to_async(lambda: request.session['chat'])()
+        
+        # Generate a response based on the user message and chat history
+        response = generate_conversational_response('farmer', user_message, chat_history)
+        print("Response collected")
+        
+        # Append the bot's response to the chat history in the session
+        await sync_to_async(request.session['chat'].append)(f"Bot: {response}")
+
+        # Optional: Convert text response to speech
+        await text_to_speech(response, voice='en-IN-PrabhatNeural')
     else:
         response = "Chatbot says: Hello! How can I help you?"
 
     return JsonResponse({'response': response})
+
+
 def accuracy(request):
     data={
         'decisiontree':'''Total Days Required - MSE: 157.04711508242963, MAE: 9.495566560020992, R²: 0.98
@@ -76,3 +104,27 @@ Minutes Per Day - MSE: 4.21e-05, MAE: 0.0029900000000000187, R²: 1.00 ''',
     }
     
     return render(request,'accuracy.html',data)
+
+def characters(request):
+    with open('C:/study material/ty/dsml/DSML_PROJECT/DSML_PBL/DSML_PBL/templates/data.json', 'r') as file:
+        data = json.load(file)
+    print(data)
+    return render(request, 'characters.html', {'data': data})
+
+
+def check_grammer(request):
+    
+    user_message = request.GET.get('message', None)
+    print(user_message)
+    accuracy,correct_sentence=check_text_accuracy(user_message)
+    print(correct_sentence)
+    return JsonResponse({"corrected":correct_sentence})
+
+def accuracy_score(request):
+    print(userinputs)
+    text=""
+    for i in userinputs:
+        text+=i+". "
+    score ,co=check_text_accuracy(text)
+    print(score)
+    return HttpResponse(score)

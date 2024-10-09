@@ -58,12 +58,12 @@ def check_text_accuracy(text):
         return 0.0  # Avoid division by zero
 
     accuracy = (correct_sentences / total_sentences) * 100
-    return accuracy
+    return accuracy,corrected_sentence
 
 # Example text
 # text = "he are not doing well.But he is trying for it."
-text="Hi how are you today I am not feeling well"
+# text="Hi how are you today I am not feeling well"
 
-# Check text accuracy
-accuracy = check_text_accuracy(text)
-print(f"Percentage of correct sentences: {accuracy:.2f}%")
+# # Check text accuracy
+# accuracy = check_text_accuracy(text)
+# print(f"Percentage of correct sentences: {accuracy:.2f}%")
