@@ -59,40 +59,48 @@ def result(request):
 
 def chatpage(request):
     userinputs=[]
+    request.session['chat']=[]
+    request.session.set_expiry(0)
     return render(request,'practise.html')
 
 async def chat(request):
     user_message = request.GET.get('message', None)
-    userinputs.append(user_message)
     
-    # Check if the 'chat' key exists in the session
-    if not await sync_to_async(lambda: 'chat' in request.session)():
-        # Initialize the 'chat' key in the session if it does not exist
+    # Check if 'chat' exists in session
+    has_chat = await sync_to_async(lambda: 'chat' in request.session)()
+    if not has_chat:
         await sync_to_async(request.session.__setitem__)('chat', [])
-
-    # Simulate a chatbot response
-    print("Chat system open")
-
+    
     if user_message:
-        # Append user message to the session chat history
-        await sync_to_async(request.session['chat'].append)(f"User: {user_message}")
+        # Append user message
+        # await sync_to_async(lambda: request.session['chat'].append(f"User: {user_message}"))()
         
-        # Fetch chat history from the session
-        chat_history = await sync_to_async(lambda: request.session['chat'])()
+        # Fetch chat history
+        chat_history = await sync_to_async(lambda: list(request.session['chat']))()
         
-        # Generate a response based on the user message and chat history
-        response = generate_conversational_response('farmer', user_message, chat_history)
+        # Generate response
+        # Assuming generate_conversational_response is synchronous
+        response = await sync_to_async(generate_conversational_response)('farmer', user_message, chat_history)
         print("Response collected")
         
-        # Append the bot's response to the chat history in the session
-        await sync_to_async(request.session['chat'].append)(f"Bot: {response}")
-
-        # Optional: Convert text response to speech
+        # Append bot response
+        dt={
+            "user":user_message,
+            "bot":response,
+        }
+        await sync_to_async(lambda: request.session['chat'].append(dt))()
+        
+        # Mark session as modified
+        await sync_to_async(lambda: setattr(request.session, 'modified', True))()
+        
+        # Convert text response to speech
+        # Assuming text_to_speech is asynchronous; if not, wrap it
         await text_to_speech(response, voice='en-IN-PrabhatNeural')
     else:
         response = "Chatbot says: Hello! How can I help you?"
-
+    
     return JsonResponse({'response': response})
+
 
 
 def accuracy(request):
@@ -121,10 +129,35 @@ def check_grammer(request):
     return JsonResponse({"corrected":correct_sentence})
 
 def accuracy_score(request):
-    print(userinputs)
-    text=""
-    for i in userinputs:
-        text+=i+". "
-    score ,co=check_text_accuracy(text)
-    print(score)
-    return HttpResponse(score)
+    # Ensure that the 'chat' key exists in the session
+    if 'chat' in request.session:
+        # Retrieve the chat messages stored in the session
+        # print(request.session['chat'])
+        if(request.session['chat']==[]):
+            return HttpResponse('no chat yet')
+        chat_history = request.session['chat']
+        chat_text=""
+        for i in chat_history:
+            print(i['user'])
+        # Combine the chat messages into a single text for grammar checking
+            chat_text +=i['user']+". "
+            
+        
+        # Calculate the grammar accuracy using the check_text_accuracy function
+        score, corrected_text = check_text_accuracy(chat_text)
+        
+        # Print score to server log for debugging purposes
+        print(f"Grammar Accuracy Score: {score}%")
+        
+        # Return the accuracy score as an HTTP response
+        return HttpResponse(f"Grammar Accuracy Score: {score:.2f}%")
+    else:
+        # If no chat history is found in the session, return an error message
+        return HttpResponse("No chat history found to evaluate accuracy.")
+
+
+
+def clear_session(request):
+    print(request.session['chat'])
+    request.session.flush()  # This will clear the session data
+    return HttpResponse("Session cleared.")

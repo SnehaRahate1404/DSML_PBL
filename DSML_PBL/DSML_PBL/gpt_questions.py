@@ -14,7 +14,9 @@ def generate_conversational_response(role, user_message, chat_history):
     The role enhances the conversation by giving context on how the agent should respond.
     """
     # Combine the chat history into a formatted string
-    conversation_context = "\n".join(chat_history)
+    conversation_context = "\n".join(
+        f"User: {entry['user']}\nBot: {entry['bot']}" for entry in chat_history
+    )
 
     # Define a dynamic agent for generating responses based on the role
     conversational_agent = Agent(

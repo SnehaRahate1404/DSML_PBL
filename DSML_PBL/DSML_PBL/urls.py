@@ -28,5 +28,6 @@ urlpatterns = [
     path('accuracy',views.accuracy),
     path('characters',views.characters),
     path('checkgrammar/',views.check_grammer),
-    path('accuracyScore',views.accuracy_score)
+    path('score',views.accuracy_score),
+    path('clear',views.clear_session)
 ]
