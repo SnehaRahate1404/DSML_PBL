@@ -29,7 +29,7 @@ def Home(request):
 
 def result(request):
     # Get initial proficiency and session duration from query parameters
-    initial_proficiency = int(request.GET.get('initial_proficiency', 20))  # Default to 30 if not provided
+    initial_proficiency = int(request.GET.get('initial_proficiency', 60))  # Default to 30 if not provided
     session_duration = int(request.GET.get('session_duration', 20))  # Default to 10 if not provided
 
     # Create an empty list to hold the predictions
@@ -105,9 +105,9 @@ async def chat(request):
 
 def accuracy(request):
     data={
-        'decisiontree':'''Total Days Required - MSE: 157.04711508242963, MAE: 9.495566560020992, R²: 0.98
-Minutes Per Day - MSE: 4.21e-05, MAE: 0.0029900000000000187, R²: 1.00 ''',
-        'linearRegression':"0.91",
+        'decisiontree':'''Total Days Required -  R²: 0.98
+Minutes Per Day -  R²: 1.00 ''',
+        'linearRegression':"R²: 0.89",
         "gradientMethod":"0.87"
     }
     
