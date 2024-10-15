@@ -17,17 +17,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from DSML_PBL import views
+from .token import get_csrf_token
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.Home),
-    path('result/', views.result),
-    path('chatp',views.chatpage),
+    path('result', views.result),
+    path('chatp',views.chatpage,name='chatp'),
     path('chat/',views.chat),
     path('accuracy',views.accuracy),
     path('characters',views.characters),
     path('checkgrammar/',views.check_grammer),
     path('score',views.accuracy_score),
-    path('clear',views.clear_session)
+    path('clear',views.clear_session),
+    path('stopchat', views.stopchat,name='stopchat'),
+    path('get-csrf-token/', get_csrf_token, name='get_csrf_token'),
+    
 ]

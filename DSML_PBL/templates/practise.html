@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot</title>
+    <title>Chatbot with Voice Input</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,7 +21,7 @@
 
         .chat-box {
             padding: 20px;
-            height: 500px;
+            height: 450px;
             overflow-y: auto;
             border-bottom: 1px solid #ddd;
         }
@@ -30,24 +30,18 @@
             display: flex;
             padding: 10px;
             background-color: #f7f7f7;
-        }
-
-        .chat-input input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
+            justify-content: center;
         }
 
         .chat-input button {
             padding: 10px;
-            margin-left: 10px;
             background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 50%;
             cursor: pointer;
+            width: 50px;
+            height: 50px;
         }
 
         .chat-input button:hover {
@@ -72,37 +66,137 @@
             font-style: italic;
             color: red;
         }
+
+        .timer-display {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stop-chat-btn {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .stop-chat-btn:hover {
+            background-color: #d93636;
+        }
+
+        .mic-icon {
+            font-size: 30px;
+            color: white;
+        }
     </style>
 </head>
 <body>
+
+<div class="timer-display" id="timer">00:00</div> <!-- Timer display -->
 
 <div class="chat-container">
     <div class="chat-box" id="chat-box">
         <!-- Chat messages will appear here -->
     </div>
     <div class="chat-input">
-        <input type="text" id="user-input" placeholder="Type a message...">
-        <button onclick="sendMessage()">Send</button>
+        <button onclick="startVoiceInput()">
+            <i class="mic-icon">🎤</i>
+        </button>
     </div>
+    <button class="stop-chat-btn" onclick="stopChat()">Stop Chat</button>
 </div>
 
-
 <script>
-    function sendMessage() {
-        const userInput = document.getElementById('user-input').value;
-        if (userInput.trim() === "") return;
 
-        // Append user message to chat
-        appendMessage(userInput, 'user');
-
-        // Clear input field
-        document.getElementById('user-input').value = '';
-
-        // Step 1: Send the user input to the checkgrammar route
-        fetch(`/checkgrammar/?message=${encodeURIComponent(userInput)}`)
+    function getCSRFTokenFromServer() {
+        return fetch('/get-csrf-token/')
             .then(response => response.json())
             .then(data => {
-                const correctedMessage = data.corrected || userInput;  // Fallback if no correction
+                console.log(data)
+                return data.csrfToken;  // Return the CSRF token
+            })
+            .catch(error => {
+                console.error('Error fetching CSRF token:', error);
+            });
+    }
+
+    
+
+    let timerInterval;
+    let seconds = 0, minutes = 0;
+
+    // Timer function to start counting
+    function startTimer() {
+        timerInterval = setInterval(function () {
+            seconds++;
+            if (seconds === 60) {
+                minutes++;
+                seconds = 0;
+            }
+            document.getElementById('timer').textContent =
+                (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
+        }, 1000);
+    }
+
+    // Stop timer without resetting values (fixes the issue)
+    function stopTimer() {
+        clearInterval(timerInterval);
+    }
+
+    // Function to stop chat and send the timer values to the backend
+    function stopChat() {
+        const currentMinutes = minutes;
+        const currentSeconds = seconds;
+    
+        stopTimer();
+    
+        // Fetch the CSRF token from the server first
+        getCSRFTokenFromServer().then(csrfToken => {
+            // Send the time to the backend via POST request
+            fetch('/stopchat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken  // Use CSRF token from the server
+                },
+                body: JSON.stringify({
+                    minutes: currentMinutes,
+                    seconds: currentSeconds
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Chat stopped and time sent:', data);
+                appendMessage('Chat stopped.', 'bot');
+                window.location.href = data.redirect_url;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    }
+
+    // Start the timer when the page is loaded
+    window.onload = function() {
+        startTimer();
+        getCSRFTokenFromServer();  // Optionally preload the CSRF token if needed
+    };
+
+    // Function to send voice input message
+    function sendMessage(voiceInput) {
+        // Append user message to chat
+        appendMessage(voiceInput, 'user');
+
+        // Step 1: Send the user input to the checkgrammar route
+        fetch(`/checkgrammar/?message=${encodeURIComponent(voiceInput)}`)
+            .then(response => response.json())
+            .then(data => {
+                const correctedMessage = data.corrected || voiceInput;  // Fallback if no correction
                 // Append corrected message below user input
                 appendMessage(`Corrected: ${correctedMessage}`, 'corrected');
 
@@ -129,12 +223,27 @@
         chatBox.scrollTop = chatBox.scrollHeight;  // Scroll to the bottom
     }
 
-    // Add event listener to the input field to send message on Enter key press
-    document.getElementById('user-input').addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') {
-            sendMessage();
-        }
-    });
+    // Web Speech API for voice input
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    // Function to start voice input
+    function startVoiceInput() {
+        recognition.start();
+    }
+
+    // Handle the voice recognition result
+    recognition.onresult = function(event) {
+        const voiceInput = event.results[0][0].transcript;
+        sendMessage(voiceInput);  // Automatically send the message after voice input
+    };
+
+    recognition.onerror = function(event) {
+        console.error('Speech recognition error', event.error);
+    };
+
 </script>
+
 </body>
 </html>

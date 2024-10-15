@@ -1,58 +1,83 @@
-.body{
+.body {
     margin: 0;
     height: 100%;
     background-image: linear-gradient(rgb(211, 60, 211), rgb(243, 243, 113));
     background-repeat: no-repeat;
+    background-attachment: fixed;
 }
-.wishes{
+
+/* Center aligned wishes section */
+.wishes {
     display: flex;
     justify-content: center;
     align-items: center;
     padding-top: 1em;
 }
-#wishes{
+
+/* White text for heading */
+#wishes {
     color: white;
+    font-size: 2rem;
+    font-weight: bold;
 }
-.container-home{
+
+/* Home container layout */
+.container-home {
     display: flex;
     flex-direction: row;
     padding: 5em;
     justify-content: center;
     gap: 50px;
 }
-.card-img-top{
-    height:349px;
+
+/* Card image size */
+.card-img-top {
+    height: 349px;
+    object-fit: cover;
 }
-.background{
+
+/* Background color for nav bar */
+.background {
     background-color: rgb(127, 31, 93) !important;
     height: 6em;
 }
-.profile-icon{
+
+/* Profile icon size */
+.profile-icon {
     height: 5em;
 }
-.form-login , .login-container{
-   padding: 5em;
+
+/* Login form container */
+.form-login, .login-container {
+    padding: 5em;
     display: flex;
     flex-direction: column;
-    align-content:center;
+    align-content: center;
     justify-content: center;
     flex-wrap: wrap;
 }
-.heading{
+
+/* Centered heading */
+.heading {
+    display: flex;
+    justify-content: center;
+    color: #fff;
+}
+
+/* Mic button centered */
+.mic {
     display: flex;
     justify-content: center;
 }
-.mic{
-    display:flex ;
-    justify-content: center;
-}
-.mic-img{
+
+/* Mic image size */
+.mic-img {
     width: 10em;
 }
-.chat-box{
-    margin-left: 18em;
-    margin-top: 3em;
-    margin-bottom: 1em;
+
+/* Chat box style */
+.chat-box {
+    margin: 3em 18em 1em 18em;
     padding: 5em;
     display: flex;
     flex-direction: column;
@@ -63,14 +88,74 @@
     border-radius: 10px;
     background-color: rgb(213, 209, 209);
 }
+
+/* Timer text size */
 .timer {
     font-size: 2rem;
     margin-top: 10px;
     text-align: center;
 }
-.mic-button{
+
+/* Mic button style */
+.mic-button {
     border: none;
     background: transparent;
     padding: 0;
     cursor: pointer;
+}
+
+/* MEDIA QUERIES: Responsive for smaller screens */
+@media (max-width: 768px) {
+    .container-home {
+        flex-direction: column;
+        padding: 2em;
+        gap: 20px;
+    }
+
+    .chat-box {
+        margin: 1em;
+        padding: 2em;
+        width: 90%;
+        height: auto;
+    }
+
+    .wishes {
+        padding-top: 0.5em;
+    }
+
+    #wishes {
+        font-size: 1.5rem;
+    }
+
+    .mic-img {
+        width: 6em;
+    }
+
+    .timer {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container-home {
+        padding: 1em;
+        gap: 10px;
+    }
+
+    .chat-box {
+        padding: 1.5em;
+        width: 100%;
+    }
+
+    .mic-img {
+        width: 5em;
+    }
+
+    #wishes {
+        font-size: 1.2rem;
+    }
+
+    .timer {
+        font-size: 1.2rem;
+    }
 }

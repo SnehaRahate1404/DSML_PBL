@@ -1,14 +1,26 @@
 [
     {
         "name":"doctor",
-        "img":"https://tse2.mm.bing.net/th?id=OIP.8Xh-KbH6Np3qrsiQfG_REgHaKj&pid=Api&P=0&h=180"
+        "img":"/static/images/doctor.jpg"
     },
     {
         "name":"farmer",
-        "img":"https://s3.envato.com/files/89905366/Cartoon%20Farmer.jpg"
+        "img":"/static/images/farmer.jpg"
     },
     {
-        "name":"cab driver",
-        "img":"https://tse4.mm.bing.net/th?id=OIP.oZLw2T4GZa1gsS_IekpbtQHaFm&pid=Api&P=0&h=180"
+        "name":"Cab Driver",
+        "img":"/static/images/cab driver.jpg"
+    },
+    {
+        "name":"Tour Guide",
+        "img":"/static/images/tour guide.jpg"
+    },
+    {
+        "name":"Engineer",
+        "img":"/static/images/engineer.jpg"
+    },
+    {
+        "name":"Hotel manager",
+        "img":"/static/images/hotel manager.jpg"
     }
 ]
