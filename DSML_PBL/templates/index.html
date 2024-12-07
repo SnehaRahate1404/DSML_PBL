@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{% comment %} <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -97,5 +97,218 @@
 
     <script src="script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html> {% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>An Intelligent Application for Improving English Proficiency</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fc;
+            color: #333;
+        }
+
+        .navbar {
+            background-color: #6c63ff;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.8rem;
+            color: white !important;
+        }
+
+        .navbar .btn {
+            background-color: white;
+            color: #6c63ff;
+            font-weight: bold;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar .btn:hover {
+            background-color: #5653ff;
+            color: white;
+        }
+
+        .hero-section {
+            background-image: url('static/images/bg1.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+
+        .hero-section .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .hero-section p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+        }
+
+        .hero-section .btn-primary {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+        }
+
+        .card-section {
+            padding: 50px 0;
+        }
+
+        .card-section h2 {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 2.5rem;
+            color: #333;
+        }
+
+        .card {
+            border: none;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card-img-top {
+            height: 220px;
+            object-fit: cover;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .card-body {
+            text-align: center;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #6c63ff;
+        }
+
+        .btn-primary {
+            background-color: #6c63ff;
+            border-color: #6c63ff;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #5653ff;
+            border-color: #5653ff;
+        }
+
+        footer {
+            background-color: #6c63ff;
+            padding: 30px;
+            text-align: center;
+            color: white;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark py-3">
+        <div class="container">
+            <a class="navbar-brand" href="#">Proficiency Enhancer</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="ms-auto">
+                    <a href="/accuracy" class="btn">Model Accuracy</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="content">
+                <h1>Boost Your English Proficiency</h1>
+                <p>Start your personalized journey towards mastering English with interactive tools and intelligent assessments.</p>
+                <a href="/characters" class="btn btn-primary">Get Started</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Card Section -->
+    <section class="card-section">
+        <div class="container">
+            <h2>Explore Your Learning Options</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="/static/images/practise.jpg" class="card-img-top" alt="Practice">
+                        <div class="card-body">
+                            <h5 class="card-title">Interactive Practice</h5>
+                            <p class="card-text">Engage in fun, interactive practice sessions to improve your English skills.</p>
+                            <a href="/characters" class="btn btn-primary">Start Practicing</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="/static/images/assessment.jpg" class="card-img-top" alt="Assessment">
+                        <div class="card-body">
+                            <h5 class="card-title">Personalized Assessments</h5>
+                            <p class="card-text">Receive tailored feedback based on your progress and proficiency levels.</p>
+                            <a href="/assessment" class="btn btn-primary">Take Assessment</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="/static/images/progress.jpg" class="card-img-top" alt="Track Progress">
+                        <div class="card-body">
+                            <h5 class="card-title">Track Progress</h5>
+                            <p class="card-text">Monitor your improvement over time and adjust your learning plans accordingly.</p>
+                            <a href="/progress" class="btn btn-primary">Track Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Proficiency Enhancer. All Rights Reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

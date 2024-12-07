@@ -2,7 +2,6 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render,redirect
 from django.http import JsonResponse
 import os
-import joblib
 from django.conf import settings
 from .gpt_questions import generate_conversational_response
 from toolbox.text_to_voice import text_to_speech
@@ -10,6 +9,7 @@ from toolbox.language_tool import check_text_accuracy
 import json
 from asgiref.sync import sync_to_async
 # Construct the full path to the model file
+import joblib
 model_path = os.path.join(settings.BASE_DIR, 'DSML_PBL', 'model_days.pkl')
 
 userinputs=[]
