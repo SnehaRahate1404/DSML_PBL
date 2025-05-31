@@ -126,9 +126,15 @@ def check_grammer(request):
     
     user_message = request.GET.get('message', None)
     print(user_message)
-    accuracy,correct_sentence=check_text_accuracy(user_message)
-    print(correct_sentence)
-    return JsonResponse({"corrected":correct_sentence})
+    try:
+    
+        accuracy,correct_sentence=check_text_accuracy(user_message)
+
+        print(correct_sentence)
+        return JsonResponse({"corrected":correct_sentence})
+    except Exception as e:
+        print(f"Error: {e}")
+        return JsonResponse({"error": "An error occurred while checking grammar."}, status=500)
 
 def accuracy_score(request):
     # Check if 'minutes' exists in the session
