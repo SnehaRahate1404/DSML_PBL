@@ -1,0 +1,251 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #e4e8ef;
+    color: #333;
+    width: 100%;
+    overflow-x: hidden;
+    display: block;
+}
+
+/* ========== Navbar ========== */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: #6c63ff;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    flex-wrap: wrap;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.6rem;
+    color: white !important;
+}
+
+.navbar .btn {
+    background-color: white;
+    color: #6c63ff;
+    font-weight: bold;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.navbar .btn:hover {
+    background-color: #5653ff;
+    color: white;
+}
+
+/* ========== Hero Section ========== */
+.hero-section {
+   background-image: url('bg1.jpg');
+            background-size:cover;
+            background-position: center;
+            /* background-repeat: no-repeat; */
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            z-index: 100;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.hero-section .content {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+}
+
+.hero-section h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.hero-section p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.hero-section .btn-primary {
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* ========== Cards Section ========== */
+.card-section {
+    padding: 60px 20px;
+    margin-top: 60px;
+}
+
+.card-section h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2rem;
+    color: #333;
+}
+
+.container-part {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    border: none;
+    transition: transform 0.3s ease;
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-top {
+    height: 200px;
+    width: 200px;
+    object-fit: contain;
+    display: block;
+    margin: 20px auto 0 auto;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #6c63ff;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    color: #555;
+    margin-bottom: 20px;
+    max-width: 240px;
+    font-size: 0.95rem;
+}
+
+.btn-primary {
+    background-color: #6c63ff;
+    border: none;
+    padding: 10px 20px;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #f7f6e0;
+    color: red;
+    scale: 1.05;
+    font-size: 16px;
+}
+
+/* ========== Footer ========== */
+footer {
+    background-color: #6c63ff;
+    padding: 30px;
+    text-align: center;
+    color: white;
+    margin-top: 50px;
+    font-size: 0.95rem;
+}
+
+/* ========== Responsive Breakpoints ========== */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+
+    .hero-section p {
+        font-size: 1rem;
+    }
+
+    .navbar-brand {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+
+    .card-img-top {
+        height: 180px;
+        width: 180px;
+    }
+
+    .card-body {
+        padding: 16px;
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section h1 {
+        font-size: 1.8rem;
+    }
+
+    .hero-section p {
+        font-size: 0.95rem;
+    }
+
+    .btn-primary {
+        font-size: 0.9rem;
+        padding: 10px 16px;
+    }
+
+    .card-img-top {
+        height: 160px;
+        width: 160px;
+    }
+}
